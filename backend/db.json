@@ -1,0 +1,20 @@
+[
+  {
+    "firstName": "Robert",
+    "lastName": "Wolfkisser",
+    "email": "rob_wolf@gmail.com",
+    "phone": "+44 (452) 886 09 12"
+  },
+  {
+    "firstName": "Jill",
+    "lastName": "Jailbreaker",
+    "email": "jj@breaker.com",
+    "phone": "+44 (934) 777 12 76"
+  },
+  {
+    "firstName": "Henry",
+    "lastName": "Silkeater",
+    "email": "henry@silkeater.io",
+    "phone": "+44 (901) 384 88 34"
+  }
+]
