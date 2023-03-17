@@ -1,18 +1,20 @@
 import { Request, Response, Router } from 'express'
 import User from '../../models/userModel';
+import { faker } from '@faker-js/faker';
+
 
 const router = Router()
 
-router.get('/users', async (req: Request, res: Response) => {
+router.get('/users', async (res: Response) => {
   const users = await User.find({})
   return res.status(200).send(users)
 })
 
-router.post('/users', async (req: Request, res: Response) => {
-  const { firstName, lastName, email, phone } = req.query;
+router.post('/users', async (req: Request) => {
+  const { name, email, phone } = req.query;
   const user = new User({
-    firstName,
-    lastName,
+    id: faker.datatype.uuid(),
+    name,
     email,
     phone,
   });

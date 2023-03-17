@@ -1,11 +1,11 @@
 import express from 'express'
 import cors from 'cors';
-import { connectionDB } from './db';
+import { initDB } from './db';
 import userRoute from './routes/userRoute';
 
 
 const main = async () => {
-  connectionDB();
+  initDB()
 
   const app = express();
   app.use(cors());
