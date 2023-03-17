@@ -1,24 +1,29 @@
-import { Title, Box, Flex, Group, Button } from '@mantine/core'
+import { Title, Box, SimpleGrid, Group, Button, Paper } from '@mantine/core'
 import { Contacts } from '@/components/Contacts'
-import { CreateUser } from '@/components/CreateUser'
+import { UserForm } from '@/components/UserForm'
 import Centered from '@/layouts/Centered'
 
 export function ContactsPage() {
+  const user = {
+    id: '',
+    name: '',
+    email: '',
+    phone: '',
+  }
   return (
     <Centered>
-      <Flex gap='md'>
-        <Box sx={{ flex: 0.5 }}>
+      <SimpleGrid cols={2} breakpoints={[{ maxWidth: 755, cols: 1 }]}>
+        <Box>
           <Group align='center' py='md'>
             <Title order={2}>Contacts</Title>
             <Button>+ Add Contact</Button>
           </Group>
           <Contacts />
         </Box>
-        <Box sx={{ flex: 0.5 }}>
-          <Title order={3}>Create</Title>
-          <CreateUser />
-        </Box>
-      </Flex>
+        <Paper shadow='xs' p='md' withBorder>
+          <UserForm {...user} />
+        </Paper>
+      </SimpleGrid>
     </Centered>
   )
 }
