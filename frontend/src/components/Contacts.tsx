@@ -1,18 +1,17 @@
 import { List } from '@mantine/core'
 
 interface Props {
-  contacts?: []
+  users?: []
 }
-export const Contacts = ({ contacts }: Props) => {
-  const items = contacts?.map((contact) => {
-    const { id, firstName, lastName } = contact
-
+export const Contacts = ({ users }: Props) => {
+  const items = users?.map((user) => {
+    const { id, firstName, lastName } = user
     return <List.Item key={id}>{`${firstName} ${lastName}`}</List.Item>
   })
   return (
     <>
       <List>
-        {contacts?.length ? (
+        {users?.length ? (
           <> {items}</>
         ) : (
           <List.Item>You have not added any contacts, yet.</List.Item>
