@@ -6,7 +6,7 @@ import mongoose from 'mongoose';
 
 const router = Router()
 
-router.get('/users', async (res: Response) => {
+router.get('/users', async (_, res: Response) => {
   const users = await User.find({})
   return res.status(200).send(users)
 })
