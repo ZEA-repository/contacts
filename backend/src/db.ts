@@ -1,7 +1,7 @@
 import { connect } from 'mongoose';
 import dotenv from 'dotenv';
-import User from '../models/userModel';
-import { users } from './utils/createUsers'
+import User from '~/models/userModel';
+import { users } from '@/utils/createUsers'
 
 
 dotenv.config({ path: './config.env' });

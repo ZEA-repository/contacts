@@ -1,7 +1,8 @@
+import 'module-alias/register';
 import express from 'express'
 import cors from 'cors';
-import { initDB } from './db';
-import userRoute from './routes/userRoute';
+import { initDB } from '@/db';
+import userRoute from '@/routes/userRoute';
 
 
 const main = async () => {
