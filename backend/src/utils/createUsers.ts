@@ -1,15 +1,15 @@
 import { faker } from '@faker-js/faker';
 
 
-interface User {
+interface UserModel {
   id: string
   name: string
   email: string
   phone: string
 }
-export const users: User[] = [];
+export const users: UserModel[] = [];
 
-export function createRandomUser(): User {
+export function createRandomUser(): UserModel {
   return {
     id: faker.datatype.uuid(),
     name: faker.internet.userName(),

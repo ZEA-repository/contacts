@@ -1,6 +1,6 @@
 import { connect } from 'mongoose';
 import dotenv from 'dotenv';
-import User from '~/models/userModel';
+import UserModel from '~/models/userModel';
 import { users } from '@/utils/createUsers'
 
 
@@ -13,8 +13,8 @@ const connectionDB = async () => {
 export const initDB = async () => {
   connectionDB()
 
-  const count = await User.countDocuments({}).exec()
-  if (!count) await User.collection.insertMany(users)
+  const count = await UserModel.countDocuments({}).exec()
+  if (!count) await UserModel.collection.insertMany(users)
 }
 
 
