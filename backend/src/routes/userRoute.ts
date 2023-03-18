@@ -8,7 +8,7 @@ const router = Router()
 
 router.get('/users', async (_, res: Response) => {
   const users = await User.find({})
-  return res.status(200).send(users)
+  return users ? res.status(200).send(users) : res.send({ message: 'Users not found' });
 })
 
 router.put('/users/:id', async (req: Request, res: Response) => {
@@ -40,5 +40,11 @@ router.post('/users', async (req: Request) => {
 
   return await user.save();
 })
+
+router.delete('/users/:id', async (req: Request, res: Response) => {
+  const userId = new mongoose.Types.ObjectId(req.params.id);
+  const user = await User.findById({ _id: userId })
+  return user ? user.deleteOne() : res.send({ message: 'User cannot be deleted' });
+});
 
 export default router 
