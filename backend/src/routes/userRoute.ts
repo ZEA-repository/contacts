@@ -11,7 +11,7 @@ router.get('/users', async (_, res: Response) => {
   return users ? res.status(200).send(users) : res.send({ message: 'Users not found' });
 })
 
-router.put('/users/:id', async (req: Request, res: Response) => {
+router.put('/user/:id', async (req: Request, res: Response) => {
   const userId = new mongoose.Types.ObjectId(req.params.id);
   const user = await UserModel.findById(userId);
   if (user) {
@@ -19,29 +19,23 @@ router.put('/users/:id', async (req: Request, res: Response) => {
     user.email = req.body.email || user.email;
     user.phone = req.body.phone || user.phone;
     const updatedUser = await user.save();
-    const { _id, name, email, phone } = updatedUser
-    res.send({
-      _id,
-      name,
-      email,
-      phone,
-    });
+    res.send({ ...updatedUser });
   }
 });
 
-router.post('/users', async (req: Request) => {
-  const { name, email, phone } = req.query;
+router.post('/user', async (req: Request, res: Response) => {
+  const { name, email, phone } = req.body;
   const user = new UserModel({
     id: faker.datatype.uuid(),
     name,
     email,
     phone,
-  });
 
-  return await user.save();
+  });
+  res.send(await user.save());
 })
 
-router.delete('/users/:id', async (req: Request, res: Response) => {
+router.delete('/user/:id', async (req: Request, res: Response) => {
   const userId = new mongoose.Types.ObjectId(req.params.id);
   const user = await UserModel.findById({ _id: userId })
   return user ? user.deleteOne() : res.send({ message: 'UserModel cannot be deleted' });
