@@ -117,10 +117,10 @@ export function CustomHeader({ links }: Props) {
             {logo}
 
             <Group className={classes.hiddenMobile}>{items}</Group>
-            <Group spacing={0} className={classes.hiddenMobile}>
+            <Button.Group className={classes.hiddenMobile}>
               <Button variant='default'>Log in</Button>
               <Button>Sign up</Button>
-            </Group>
+            </Button.Group>
             <Burger
               opened={drawerOpened}
               onClick={toggleDrawer}

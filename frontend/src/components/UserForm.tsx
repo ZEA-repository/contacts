@@ -4,9 +4,10 @@ import { useEffect } from 'react'
 import type { User } from '@/types'
 import { IconDeviceFloppy } from '@tabler/icons-react'
 
+type UserFormType = Omit<User, '_id' | 'avatar'>
 interface Props {
-  user: User
-  onSubmit: (user: User) => void
+  user: User | undefined
+  onSubmit: (user: Partial<User>) => void
 }
 
 const useStyles = createStyles((theme) => ({
@@ -31,7 +32,7 @@ const useStyles = createStyles((theme) => ({
 
 export const UserForm: React.FC<Props> = ({ user, onSubmit }) => {
   const { classes } = useStyles()
-  const form = useForm<Omit<User, '_id' | 'avatar'>>({
+  const form = useForm<UserFormType>({
     initialValues: {
       name: '',
       email: '',

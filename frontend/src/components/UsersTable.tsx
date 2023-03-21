@@ -15,7 +15,6 @@ interface Props {
   users?: User[]
   activeUserId?: string
   setUser: (user: User) => void
-  setMode: (mode: 'edit') => void
   deleteUser: (user: User) => void
 }
 
