@@ -6,6 +6,7 @@ interface UserModel {
   name: string
   email: string
   phone: string
+  avatar: string
 }
 export const users: UserModel[] = [];
 
@@ -15,6 +16,7 @@ export function createRandomUser(): UserModel {
     name: faker.internet.userName(),
     email: faker.internet.email(),
     phone: faker.phone.number(),
+    avatar: faker.image.avatar()
   };
 }
 
