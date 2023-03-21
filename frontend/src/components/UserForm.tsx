@@ -1,33 +1,27 @@
-import {
-  TextInput,
-  Button,
-  rem,
-  createStyles,
-  Title,
-  Stack,
-  Group,
-} from '@mantine/core'
+import { TextInput, Button, rem, createStyles, Group } from '@mantine/core'
+import { useForm } from '@mantine/form'
+import { useEffect } from 'react'
+import type { User } from '@/types'
+import { IconDeviceFloppy } from '@tabler/icons-react'
 
 interface Props {
-  id: string
-  name: string
-  email: string
-  phone: string
+  user: User
+  onSubmit: (user: User) => void
 }
 
 const useStyles = createStyles((theme) => ({
   root: {
     position: 'relative',
+    paddingTop: theme.spacing.md,
   },
-
   input: {
     height: rem(56),
     paddingTop: rem(22),
   },
-
   label: {
     position: 'absolute',
     pointerEvents: 'none',
+    color: theme.colors.dark[3],
     fontSize: theme.fontSizes.sm,
     paddingLeft: theme.spacing.sm,
     paddingTop: `calc(${theme.spacing.sm} / 2)`,
@@ -35,56 +29,51 @@ const useStyles = createStyles((theme) => ({
   },
 }))
 
-export const UserForm = ({ id, name, email, phone }: Props) => {
+export const UserForm: React.FC<Props> = ({ user, onSubmit }) => {
   const { classes } = useStyles()
-  const submitUpdate = (event: any) => {
-    event.preventDefault()
-    //  handleUpdateUser(user)
-  }
+  const form = useForm<Omit<User, '_id' | 'avatar'>>({
+    initialValues: {
+      name: '',
+      email: '',
+      phone: '',
+    },
+    validate: {
+      // name:  (value) => (value.length < 2 ? 'Name must have at least 2 letters' : ''),
+      // email: (value) => (/^\S+@\S+$/.test(value) ? null : 'Invalid email'),
+      // phone: (value) => (),
+    },
+  })
+  useEffect(() => {
+    user ? form.setValues(user) : form.reset()
+  }, [user])
 
-  const submitCreate = (event: any) => {
-    event.preventDefault()
-    //  handleCreateUser(user)
-  }
-
-  const submitDelete = (event: any) => {
-    event.preventDefault()
-    //  handleDeleteUser(user.id)
-  }
   return (
-    <form onSubmit={id ? submitUpdate : submitCreate}>
-      <Title order={2}>{id ? 'Update' : 'Create'}</Title>
+    <form onSubmit={form.onSubmit((user) => onSubmit(user))}>
+      <TextInput
+        label='name'
+        placeholder='John Doe'
+        classNames={classes}
+        {...form.getInputProps('name')}
+      />
 
-      <Stack>
-        <TextInput
-          label='name'
-          placeholder='John Doe'
-          classNames={classes}
-          value={name}
-        />
+      <TextInput
+        label='email'
+        placeholder='your@email.com'
+        classNames={classes}
+        {...form.getInputProps('email')}
+      />
 
-        <TextInput
-          label='email'
-          placeholder='your@email.com'
-          value={email}
-          classNames={classes}
-        />
+      <TextInput
+        label='phone'
+        placeholder='xx-xxx-xxx-xx-xx'
+        classNames={classes}
+        {...form.getInputProps('phone')}
+      />
 
-        <TextInput
-          label='phone'
-          placeholder='xx-xxx-xxx-xx-xx'
-          classNames={classes}
-          value={phone}
-        />
-      </Stack>
-      <Group position='apart'>
-        {id && (
-          <Button type='submit' onClick={submitDelete}>
-            Delete
-          </Button>
-        )}
-
-        <Button type='submit'>{id ? 'Update' : 'Create'}</Button>
+      <Group mt='md'>
+        <Button leftIcon={<IconDeviceFloppy size='1rem' />} type='submit'>
+          Save
+        </Button>
       </Group>
     </form>
   )
