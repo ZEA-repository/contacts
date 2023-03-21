@@ -1,29 +1,77 @@
-import { Title, Box, SimpleGrid, Group, Button, Paper } from '@mantine/core'
-import { Contacts } from '@/components/Contacts'
+import { Title, Box, Button, Modal } from '@mantine/core'
+import { UsersTable } from '@/components/UsersTable'
 import { UserForm } from '@/components/UserForm'
 import Centered from '@/layouts/Centered'
+import { useLoaderData } from 'react-router-dom'
+import { useState } from 'react'
+import { IconUserPlus } from '@tabler/icons-react'
+import { deleteUserRequest, createUserRequest, updateUserRequest } from '@/api'
+import type { User } from '@/types'
 
 export function ContactsPage() {
-  const user = {
-    id: '',
-    name: '',
-    email: '',
-    phone: '',
+  const initialUsers = useLoaderData() as User[]
+  const [users, setUsers] = useState<User[]>(initialUsers)
+  const [user, setUser] = useState<User>()
+  const [mode, setMode] = useState<'create' | 'update'>()
+
+  const onSetUser = (user: User) => {
+    setUser(user)
+    setMode('update')
+  }
+  const onCreate = (user: User) => {
+    createUserRequest(user).then((response) =>
+      response.json().then((newUser) => {
+        setUsers([...users, { ...user, _id: newUser._id }])
+        close()
+      })
+    )
+  }
+  const onUpdate = (user: User) => {
+    updateUserRequest(user).then((response) =>
+      response.json().then(({ _doc }) => {
+        setUsers(users.map((user) => (user._id === _doc._id ? _doc : user)))
+        close()
+      })
+    )
+  }
+  const onDelete = (user: User) => {
+    deleteUserRequest(user._id)
+    setUsers(users.filter((u) => u._id != user._id))
+  }
+  const close = () => {
+    setUser(undefined)
+    setMode(undefined)
   }
   return (
     <Centered>
-      <SimpleGrid cols={2} breakpoints={[{ maxWidth: 755, cols: 1 }]}>
-        <Box>
-          <Group align='center' py='md'>
-            <Title order={2}>Contacts</Title>
-            <Button>+ Add Contact</Button>
-          </Group>
-          <Contacts />
-        </Box>
-        <Paper shadow='xs' p='md' withBorder>
-          <UserForm {...user} />
-        </Paper>
-      </SimpleGrid>
+      <Box mt='md'>
+        <Title mb='md' order={2}>
+          Contacts
+        </Title>
+        <UsersTable
+          users={users}
+          activeUserId={user?._id}
+          setUser={onSetUser}
+          deleteUser={onDelete}
+        />
+        <Button
+          mt='md'
+          leftIcon={<IconUserPlus size='1rem' />}
+          onClick={() => setMode('create')}
+        >
+          Add Contact
+        </Button>
+      </Box>
+      <Modal
+        opened={mode !== undefined}
+        onClose={close}
+        title={mode == 'create' ? 'Add contact' : 'Edit contact'}
+      >
+        <UserForm
+          user={user}
+          onSubmit={mode == 'create' ? onCreate : onUpdate}
+        />
+      </Modal>
     </Centered>
   )
 }
