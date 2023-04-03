@@ -1,10 +1,10 @@
 import { connect } from 'mongoose';
 import dotenv from 'dotenv';
-import UserModel from '~/models/userModel';
-import { users } from '@/utils/createUsers'
+// import UserModel from '~/models/userModel';
+// import { users } from '@/utils/createUsers'
 
 
-dotenv.config({ path: './config.env' });
+dotenv.config({ path: './.env.local' });
 
 const connectionDB = async () => {
   await connect(process.env.MONGO_URL as string)
@@ -13,8 +13,8 @@ const connectionDB = async () => {
 export const initDB = async () => {
   connectionDB()
 
-  const count = await UserModel.countDocuments({}).exec()
-  if (!count) await UserModel.collection.insertMany(users)
+  // const count = await UserModel.countDocuments({}).exec()
+  // if (!count) await UserModel.collection.insertMany(users)
 }
 
 

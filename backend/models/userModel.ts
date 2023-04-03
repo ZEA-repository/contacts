@@ -12,6 +12,17 @@ const userSchema = new Schema({
     type: String,
     unique: true,
   },
+  password: {
+    type: String,
+    require: true,
+  },
+  isActivated: {
+    type: Boolean,
+    default: false,
+  },
+  activationLink: {
+    type: String,
+  },
   phone: {
     type: String,
     unique: true,
