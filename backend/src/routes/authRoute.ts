@@ -32,7 +32,15 @@ router.get('/activate/:link', async (req: Request, res: Response, next: NextFunc
 
 router.post('/login', async (req: Request, res: Response, next: NextFunction) => {
   try {
+    const { email, password } = req.body
+    const userData = await userService.login(email, password)
+    const maxAgeCookie = 30 * 24 * 60 * 60 * 1000 //like a refresh token
+    res.cookie('refreshToken', userData.refreshToken, {
 
+      maxAge: maxAgeCookie,
+      httpOnly: true
+    })
+    return res.json(userData)
   } catch (e) {
     next(e)
   }
@@ -40,7 +48,10 @@ router.post('/login', async (req: Request, res: Response, next: NextFunction) =>
 
 router.post('/logout', async (req: Request, res: Response, next: NextFunction) => {
   try {
-
+    const { refreshToken } = req.cookies
+    const token = await userService.logout(refreshToken)
+    res.clearCookie('refreshToken')
+    return res.json(token)
   } catch (e) {
     next(e)
   }
@@ -48,7 +59,15 @@ router.post('/logout', async (req: Request, res: Response, next: NextFunction) =
 
 router.get('/refresh', async (req: Request, res: Response, next: NextFunction) => {
   try {
+    const { refreshToken } = req.cookies
+    const userData = await userService.refresh(refreshToken)
+    const maxAgeCookie = 30 * 24 * 60 * 60 * 1000 //like a refresh token
+    res.cookie('refreshToken', userData.refreshToken, {
 
+      maxAge: maxAgeCookie,
+      httpOnly: true
+    })
+    return res.json(userData)
   } catch (e) {
     next(e)
   }
