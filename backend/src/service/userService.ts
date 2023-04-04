@@ -6,7 +6,6 @@ const tokenService = require('@/service/tokenService')
 const UserDto = require('~/dtos/userDto')
 const ApiError = require('~/exceptions/apiError')
 
-
 class UserService {
   async registration(email: string, password: string) {
     const guest = await UserModel.findOne({ email })
@@ -37,6 +36,55 @@ class UserService {
     }
     user.isActivated = true
     await user.save()
+  }
+
+  async login(email: string, password: string) {
+    const user = await UserModel.findOne({ email })
+
+    if (!user) {
+      throw new ApiError.BadRequest(`User ${email} not found`)
+    }
+    const isPasswordEquals = await bcrypt.compare(password, user.password as string)
+    if (!isPasswordEquals) {
+      throw ApiError.BadRequest('incorrect password')
+    }
+    const userDto = new UserDto(user)
+    const tokens = await tokenService.generateTokens({ ...userDto })
+    await tokenService.saveToken(userDto.id, tokens.refreshToken)
+    return {
+      ...tokens,
+      user: userDto
+    }
+  }
+
+  async logout(refreshToken: string) {
+    const token = await tokenService.removeToken(refreshToken)
+    return token
+  }
+
+  async refresh(refreshToken: string) {
+    if (!refreshToken) {
+      throw ApiError.UnautorizedError()
+    }
+    const userData = await tokenService.validateRefreshToken(refreshToken)
+    const tokenFromDb = await tokenService.findToken(refreshToken)
+
+    if (!userData || !tokenFromDb) {
+      throw ApiError.UnautorizedError()
+    }
+    const user = await UserModel.findById(userData.id)
+    const userDto = new UserDto(user)
+    const tokens = await tokenService.generateTokens({ ...userDto })
+    await tokenService.saveToken(userDto.id, tokens.refreshToken)
+    return {
+      ...tokens,
+      user: userDto
+    }
+  }
+
+  async getAllUsers() {
+    const user = UserModel.find()
+    return user
   }
 }
 
