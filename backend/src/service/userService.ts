@@ -4,6 +4,7 @@ import { v4 as uuidv4 } from 'uuid';
 const MailService = require('@/service/mailService')
 const tokenService = require('@/service/tokenService')
 const UserDto = require('~/dtos/userDto')
+const ApiError = require('~/exceptions/apiError')
 
 
 class UserService {
@@ -11,7 +12,7 @@ class UserService {
     const guest = await UserModel.findOne({ email })
 
     if (guest) {
-      throw new Error(`email: ${email} already exist`)
+      throw new ApiError.BadRequest(`email: ${email} already exist`)
     }
     const hasPassword = await bcrypt.hash(password, 3)
     const activationLink = uuidv4()
@@ -32,7 +33,7 @@ class UserService {
   async activate(activationLink: string) {
     const user = await UserModel.findOne({ activationLink })
     if (!user) {
-      throw new Error(`incorrect activation link`)
+      throw new ApiError.BadRequest(`incorrect activation link`)
     }
     user.isActivated = true
     await user.save()
