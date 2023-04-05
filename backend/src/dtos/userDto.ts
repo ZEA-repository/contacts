@@ -1,10 +1,9 @@
-import type { IUserDto } from '~/types/user'
+import type { IUserDto } from '@/types/user.js'
 
-
-class UserDto {
-  email;
-  id;
-  isActivated;
+export default class UserDto {
+  email
+  id
+  isActivated
 
   constructor(model: IUserDto) {
     this.email = model.email
@@ -12,5 +11,3 @@ class UserDto {
     this.isActivated = model.isActivated
   }
 }
-
-module.exports = UserDto

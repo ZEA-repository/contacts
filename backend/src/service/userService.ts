@@ -1,20 +1,21 @@
-import UserModel from '~/models/userModel';
+import UserModel from '@/models/userModel.js'
+import MailService from '@/service/mailService.js'
+import tokenService from '@/service/tokenService.js'
+import UserDto from '@/dtos/userDto.js'
 import bcrypt from 'bcrypt'
-import { v4 as uuidv4 } from 'uuid';
-const MailService = require('@/service/mailService')
-const tokenService = require('@/service/tokenService')
-const UserDto = require('~/dtos/userDto')
-const ApiError = require('~/exceptions/apiError')
-// import type { IUserModel } from '~/types/user'
+import { v4 as uuidv4 } from 'uuid'
 
-class UserService {
+import { ApiError } from '@/exceptions/apiError.js'
+// import type { IUserModel } from '@/types/user.js'
+
+export default class UserService {
   async userDtoWithTokens(user: any) {
     const userDto = new UserDto(user)
     const tokens = await tokenService.generateTokens({ ...userDto })
     await tokenService.saveToken(userDto.id, tokens.refreshToken)
     return {
       ...tokens,
-      user: userDto
+      user: userDto,
     }
   }
 
@@ -86,4 +87,4 @@ class UserService {
   }
 }
 
-module.exports = new UserService()
+// module.exports = new UserService()

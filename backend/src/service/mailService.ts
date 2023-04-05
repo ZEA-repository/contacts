@@ -1,7 +1,7 @@
-import nodemailer, { Transporter } from 'nodemailer';
+import nodemailer, { Transporter } from 'nodemailer'
 
-class MailService {
-  transporter: Transporter;
+export default class MailService {
+  transporter: Transporter
   constructor() {
     this.transporter = nodemailer.createTransport({
       host: process.env.SMPT_HOST,
@@ -9,9 +9,9 @@ class MailService {
       secure: false, // true for 465, false for other ports
       auth: {
         user: process.env.SMPT_USER,
-        pass: process.env.SMPT_PASSWORD
+        pass: process.env.SMPT_PASSWORD,
       },
-    });
+    })
   }
 
   async sendActivationMail(to: string, link: string) {
@@ -20,15 +20,11 @@ class MailService {
       to,
       subject: 'Активация аккаунта на ' + process.env.API_URL,
       text: 'текст',
-      html:
-        ` <div>
+      html: ` <div>
               <h1>Для активации перейдите по ссылке</h1>
               <a href="${link}">${link}</a>
           </div>
-        `
-    });
+        `,
+    })
   }
 }
-
-
-module.exports = new MailService()

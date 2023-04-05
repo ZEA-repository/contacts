@@ -1,7 +1,7 @@
-import TokenModel from '~/models/tokenModel';
+import TokenModel from '@/models/tokenModel.js'
 // import jwt from 'jsonwebtoken';
 // const jwt = require('jsonwebtoken');
-import jwt from 'jsonwebtoken'
+import { sign, verify } from 'jsonwebtoken'
 
 interface Payload {
   email: string
@@ -9,18 +9,18 @@ interface Payload {
   isActivated: boolean
 }
 
-class TokenService {
+export default class TokenService {
   async generateTokens(payload: Payload) {
-    const JWT_ACCESS_SECRET = process.env.JWT_ACCESS_SECRET
-    // const accessToken = jwt.sign(payload, JWT_ACCESS_SECRET, { expiresIn: '30m' })
-    // const refreshToken = jwt.sign(payload, process.env.JWT_REFRESH_SECRET, { expiresIn: '30d' })
+    const accessToken = sign(payload, process.env.JWT_ACCESS_SECRET, { expiresIn: '30m' })
+    const refreshToken = sign(payload, process.env.JWT_REFRESH_SECRET, { expiresIn: '30d' })
     return {
-      // accessToken, refreshToken
+      accessToken,
+      refreshToken,
     }
   }
 
   async saveToken(userId: string, refreshToken: string) {
-    //FIXME: сейчас по одному пользователю находится один токен и при заходе с другого устройства токен перезатрется 
+    //FIXME: сейчас по одному пользователю находится один токен и при заходе с другого устройства токен перезатрется
     const tokenData = await TokenModel.findOne({ user: userId })
     if (tokenData) {
       tokenData.refreshToken = refreshToken
@@ -42,12 +42,10 @@ class TokenService {
 
   validateToken(token: string, secretToken: string) {
     try {
-      const userData = jwt.verify(token, secretToken)
+      const userData = verify(token, secretToken)
       return userData
     } catch (e) {
       return null
     }
   }
 }
-
-module.exports = new TokenService()

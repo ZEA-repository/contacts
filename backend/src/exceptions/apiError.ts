@@ -1,4 +1,4 @@
-module.exports = class ApiError extends Error {
+export class ApiError extends Error {
   status: number
   errors: Error[]
   __proto__: any
@@ -8,10 +8,13 @@ module.exports = class ApiError extends Error {
     this.status = status
     this.errors = errors
 
-    // restore prototype chain   
-    const actualProto = new.target.prototype;
-    if (Object.setPrototypeOf) { Object.setPrototypeOf(this, actualProto); }
-    else { this.__proto__ = actualProto; }
+    // restore prototype chain
+    const actualProto = new.target.prototype
+    if (Object.setPrototypeOf) {
+      Object.setPrototypeOf(this, actualProto)
+    } else {
+      this.__proto__ = actualProto
+    }
   }
 
   static UnautorizedError() {

@@ -1,6 +1,5 @@
-import { Schema, model } from 'mongoose';
-import type { IUserModel } from '~/types/user'
-
+import { Schema, model } from 'mongoose'
+import type { IUserModel } from '@/types/user.js'
 
 const userSchema = new Schema<IUserModel>({
   name: {
@@ -28,8 +27,8 @@ const userSchema = new Schema<IUserModel>({
   avatar: {
     type: String,
   },
-});
+})
 
-const UserModel = model<IUserModel>('User', userSchema);
+const UserModel = model<IUserModel>('User', userSchema)
 
-export default UserModel;
+export default UserModel

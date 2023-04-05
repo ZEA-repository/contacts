@@ -1,6 +1,5 @@
 import { Request, Response, Router, NextFunction } from 'express'
-const userService = require('@/service/userService');
-
+import userService from '@/service/userService.js'
 
 const router = Router()
 
@@ -10,9 +9,8 @@ router.post('/registration', async (req: Request, res: Response, next: NextFunct
     const userData = await userService.registration(email, password)
     const maxAgeCookie = 30 * 24 * 60 * 60 * 1000 //like a refresh token
     res.cookie('refreshToken', userData.refreshToken, {
-
       maxAge: maxAgeCookie,
-      httpOnly: true
+      httpOnly: true,
     })
     return res.json(userData)
   } catch (e) {
@@ -28,7 +26,7 @@ router.get('/activate/:link', async (req: Request, res: Response, next: NextFunc
   } catch (e) {
     next(e)
   }
-});
+})
 
 router.post('/login', async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -36,9 +34,8 @@ router.post('/login', async (req: Request, res: Response, next: NextFunction) =>
     const userData = await userService.login(email, password)
     const maxAgeCookie = 30 * 24 * 60 * 60 * 1000 //like a refresh token
     res.cookie('refreshToken', userData.refreshToken, {
-
       maxAge: maxAgeCookie,
-      httpOnly: true
+      httpOnly: true,
     })
     return res.json(userData)
   } catch (e) {
@@ -55,7 +52,7 @@ router.post('/logout', async (req: Request, res: Response, next: NextFunction) =
   } catch (e) {
     next(e)
   }
-});
+})
 
 router.get('/refresh', async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -63,15 +60,13 @@ router.get('/refresh', async (req: Request, res: Response, next: NextFunction) =
     const userData = await userService.refresh(refreshToken)
     const maxAgeCookie = 30 * 24 * 60 * 60 * 1000 //like a refresh token
     res.cookie('refreshToken', userData.refreshToken, {
-
       maxAge: maxAgeCookie,
-      httpOnly: true
+      httpOnly: true,
     })
     return res.json(userData)
   } catch (e) {
     next(e)
   }
-});
+})
 
-
-export default router 
+export default router
