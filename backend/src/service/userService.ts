@@ -5,28 +5,34 @@ const MailService = require('@/service/mailService')
 const tokenService = require('@/service/tokenService')
 const UserDto = require('~/dtos/userDto')
 const ApiError = require('~/exceptions/apiError')
+// import type { IUserModel } from '~/types/user'
 
 class UserService {
+  async userDtoWithTokens(user: any) {
+    const userDto = new UserDto(user)
+    const tokens = await tokenService.generateTokens({ ...userDto })
+    await tokenService.saveToken(userDto.id, tokens.refreshToken)
+    return {
+      ...tokens,
+      user: userDto
+    }
+  }
+
   async registration(email: string, password: string) {
     const guest = await UserModel.findOne({ email })
 
     if (guest) {
       throw new ApiError.BadRequest(`email: ${email} already exist`)
     }
-    const hasPassword = await bcrypt.hash(password, 3)
+
+    const encryptPassword = await bcrypt.hash(password, 3)
     const activationLink = uuidv4()
-    const user = await UserModel.create({ email, password: hasPassword, activationLink })
+    const user = await UserModel.create({ email, password: encryptPassword, activationLink })
 
     await MailService.sendActivationMail(email, `${process.env.API_URL}/activate/${activationLink}`)
 
-    const userDto = new UserDto(user)
-    const tokens = await tokenService.generateTokens({ ...userDto })
-    await tokenService.saveToken(userDto.id, tokens.refreshToken)
-
-    return {
-      ...tokens,
-      user: userDto
-    }
+    const response = await this.userDtoWithTokens(user)
+    return response
   }
 
   async activate(activationLink: string) {
@@ -48,13 +54,9 @@ class UserService {
     if (!isPasswordEquals) {
       throw ApiError.BadRequest('incorrect password')
     }
-    const userDto = new UserDto(user)
-    const tokens = await tokenService.generateTokens({ ...userDto })
-    await tokenService.saveToken(userDto.id, tokens.refreshToken)
-    return {
-      ...tokens,
-      user: userDto
-    }
+
+    const response = await this.userDtoWithTokens(user)
+    return response
   }
 
   async logout(refreshToken: string) {
@@ -66,20 +68,16 @@ class UserService {
     if (!refreshToken) {
       throw ApiError.UnautorizedError()
     }
-    const userData = await tokenService.validateRefreshToken(refreshToken)
+
+    const userData = await tokenService.validateToken(refreshToken, process.env.JWT_REFRESH_SECRET)
     const tokenFromDb = await tokenService.findToken(refreshToken)
 
     if (!userData || !tokenFromDb) {
       throw ApiError.UnautorizedError()
     }
     const user = await UserModel.findById(userData.id)
-    const userDto = new UserDto(user)
-    const tokens = await tokenService.generateTokens({ ...userDto })
-    await tokenService.saveToken(userDto.id, tokens.refreshToken)
-    return {
-      ...tokens,
-      user: userDto
-    }
+    const response = await this.userDtoWithTokens(user)
+    return response
   }
 
   async getAllUsers() {

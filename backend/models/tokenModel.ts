@@ -1,7 +1,7 @@
 import { Schema, model } from 'mongoose';
+import { ITokenModel } from '~/types/token'
 
-
-const tokenSchema = new Schema({
+const tokenSchema = new Schema<ITokenModel>({
   user: {
     type: Schema.Types.ObjectId,
     ref: 'User'
@@ -13,6 +13,6 @@ const tokenSchema = new Schema({
 
 });
 
-const UserModel = model('Token', tokenSchema);
+const UserModel = model<ITokenModel>('Token', tokenSchema);
 
 export default UserModel;

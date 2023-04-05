@@ -1,10 +1,8 @@
 import { Schema, model } from 'mongoose';
+import type { IUserModel } from '~/types/user'
 
 
-const userSchema = new Schema({
-  id: {
-    type: String,
-  },
+const userSchema = new Schema<IUserModel>({
   name: {
     type: String,
   },
@@ -32,6 +30,6 @@ const userSchema = new Schema({
   },
 });
 
-const UserModel = model('User', userSchema);
+const UserModel = model<IUserModel>('User', userSchema);
 
 export default UserModel;

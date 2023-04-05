@@ -1,6 +1,5 @@
 import nodemailer, { Transporter } from 'nodemailer';
 
-
 class MailService {
   transporter: Transporter;
   constructor() {

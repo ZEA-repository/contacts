@@ -1,9 +1,9 @@
 import 'module-alias/register';
 import express from 'express'
 import cors from 'cors';
-import { initDB } from '@/db';
-import userRoute from '@/routes/userRoute';
-import authRoute from '@/routes/authRoute';
+import { initDB } from '~/src/db';
+import userRoute from '~/src/routes/userRoute';
+import authRoute from '~/src/routes/authRoute';
 import cookieParser from 'cookie-parser'
 const errorMiddlewares = require('~/middlewares/errorMiddlewares')
 

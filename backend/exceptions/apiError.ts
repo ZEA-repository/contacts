@@ -2,6 +2,7 @@ module.exports = class ApiError extends Error {
   status: number
   errors: Error[]
   __proto__: any
+
   constructor(status: number, message: string, errors = []) {
     super(message)
     this.status = status

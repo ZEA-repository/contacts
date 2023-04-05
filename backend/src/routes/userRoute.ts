@@ -1,7 +1,6 @@
 import { NextFunction, Request, Response, Router } from 'express'
 import UserModel from '~/models/userModel';
 const userService = require('@/service/userService');
-import { faker } from '@faker-js/faker';
 import mongoose from 'mongoose';
 const authMiddleware = require('~/middlewares/authMiddlewares')
 
@@ -36,7 +35,6 @@ router.post('/user', async (req: Request, res: Response, next: NextFunction) => 
   try {
     const { name, email, phone } = req.body;
     const user = new UserModel({
-      id: faker.datatype.uuid(),
       name,
       email,
       phone,
