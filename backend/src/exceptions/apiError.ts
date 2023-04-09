@@ -1,20 +1,18 @@
 export class ApiError extends Error {
-  status: number
-  errors: Error[]
-  __proto__: any
+  // __proto__: any
 
-  constructor(status: number, message: string, errors = []) {
+  constructor(public status: number, public message: string, public errors = []) {
     super(message)
     this.status = status
     this.errors = errors
 
     // restore prototype chain
-    const actualProto = new.target.prototype
-    if (Object.setPrototypeOf) {
-      Object.setPrototypeOf(this, actualProto)
-    } else {
-      this.__proto__ = actualProto
-    }
+    // const actualProto = new.target.prototype
+    // if (Object.setPrototypeOf) {
+    //   Object.setPrototypeOf(this, actualProto)
+    // } else {
+    //   this.__proto__ = actualProto
+    // }
   }
 
   static UnautorizedError() {

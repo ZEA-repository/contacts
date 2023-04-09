@@ -1,21 +1,21 @@
 import mongoose from 'mongoose'
 import { NextFunction, Request, Response, Router } from 'express'
 import UserModel from '@/models/userModel.js'
-import userService from '@/service/userService.js'
-import authMiddleware from '@/middlewares/authMiddlewares.js'
+import { getAllUsers } from '@/service/userService.js'
+import { authMiddlewares } from '@/middlewares/authMiddlewares.js'
 
-const router = Router()
+export const userRoute = Router()
 
-router.get('/users', authMiddleware, async (_, res: Response, next: NextFunction) => {
+userRoute.get('/users', authMiddlewares, async (_, res: Response, next: NextFunction) => {
   try {
-    const users = await userService.getAllUsers()
+    const users = await getAllUsers()
     return res.json(users)
   } catch (e) {
     next(e)
   }
 })
 
-router.put('/user/:id', async (req: Request, res: Response, next: NextFunction) => {
+userRoute.put('/user/:id', async (req: Request, res: Response, next: NextFunction) => {
   try {
     const userId = new mongoose.Types.ObjectId(req.params.id)
     const user = await UserModel.findById(userId)
@@ -31,7 +31,7 @@ router.put('/user/:id', async (req: Request, res: Response, next: NextFunction) 
   }
 })
 
-router.post('/user', async (req: Request, res: Response, next: NextFunction) => {
+userRoute.post('/user', async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { name, email, phone } = req.body
     const user = new UserModel({
@@ -45,7 +45,7 @@ router.post('/user', async (req: Request, res: Response, next: NextFunction) => 
   }
 })
 
-router.delete('/user/:id', async (req: Request, res: Response, next: NextFunction) => {
+userRoute.delete('/user/:id', async (req: Request, res: Response, next: NextFunction) => {
   try {
     const userId = new mongoose.Types.ObjectId(req.params.id)
     const user = await UserModel.findById({ _id: userId })
@@ -54,5 +54,3 @@ router.delete('/user/:id', async (req: Request, res: Response, next: NextFunctio
     next(e)
   }
 })
-
-export default router

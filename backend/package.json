@@ -4,7 +4,7 @@
   "description": "",
   "scripts": {
     "start": "npm run build && node build/index",
-    "dev": "npx nodemon",
+    "dev": "npx nodemon --ignore build/",
     "build": "rm -rf ./build && npx tsc",
     "lint": "npx eslint ./src",
     "format": "npx eslint ./src --fix"
@@ -30,6 +30,7 @@
     "@types/cors": "^2.8.13",
     "@types/express": "^4.17.17",
     "@types/jsonwebtoken": "^9.0.1",
+    "@types/module-alias": "^2.0.1",
     "@types/node": "^18.15.11",
     "@types/uuid": "^9.0.1",
     "@typescript-eslint/eslint-plugin": "^5.57.1",
@@ -49,6 +50,7 @@
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
     "jsonwebtoken": "^9.0.0",
+    "module-alias": "^2.2.2",
     "mongoose": "^7.0.1",
     "nodemailer": "^6.9.1",
     "uuid": "^9.0.0"

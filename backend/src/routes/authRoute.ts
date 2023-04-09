@@ -1,12 +1,12 @@
 import { Request, Response, Router, NextFunction } from 'express'
-import userService from '@/service/userService.js'
+import { registration, activate, login, logout, refresh } from '@/service/userService.js'
 
-const router = Router()
+export const authRoute = Router()
 
-router.post('/registration', async (req: Request, res: Response, next: NextFunction) => {
+authRoute.post('/registration', async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { email, password } = req.body
-    const userData = await userService.registration(email, password)
+    const userData = await registration(email, password)
     const maxAgeCookie = 30 * 24 * 60 * 60 * 1000 //like a refresh token
     res.cookie('refreshToken', userData.refreshToken, {
       maxAge: maxAgeCookie,
@@ -18,20 +18,20 @@ router.post('/registration', async (req: Request, res: Response, next: NextFunct
   }
 })
 
-router.get('/activate/:link', async (req: Request, res: Response, next: NextFunction) => {
+authRoute.get('/activate/:link', async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { link } = req.params
-    await userService.activate(link)
+    await activate(link)
     return res.redirect(process.env.CLIENT_URL as string)
   } catch (e) {
     next(e)
   }
 })
 
-router.post('/login', async (req: Request, res: Response, next: NextFunction) => {
+authRoute.post('/login', async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { email, password } = req.body
-    const userData = await userService.login(email, password)
+    const userData = await login(email, password)
     const maxAgeCookie = 30 * 24 * 60 * 60 * 1000 //like a refresh token
     res.cookie('refreshToken', userData.refreshToken, {
       maxAge: maxAgeCookie,
@@ -43,10 +43,10 @@ router.post('/login', async (req: Request, res: Response, next: NextFunction) =>
   }
 })
 
-router.post('/logout', async (req: Request, res: Response, next: NextFunction) => {
+authRoute.post('/logout', async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { refreshToken } = req.cookies
-    const token = await userService.logout(refreshToken)
+    const token = await logout(refreshToken)
     res.clearCookie('refreshToken')
     return res.json(token)
   } catch (e) {
@@ -54,10 +54,10 @@ router.post('/logout', async (req: Request, res: Response, next: NextFunction) =
   }
 })
 
-router.get('/refresh', async (req: Request, res: Response, next: NextFunction) => {
+authRoute.get('/refresh', async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { refreshToken } = req.cookies
-    const userData = await userService.refresh(refreshToken)
+    const userData = await refresh(refreshToken)
     const maxAgeCookie = 30 * 24 * 60 * 60 * 1000 //like a refresh token
     res.cookie('refreshToken', userData.refreshToken, {
       maxAge: maxAgeCookie,
@@ -68,5 +68,3 @@ router.get('/refresh', async (req: Request, res: Response, next: NextFunction) =
     next(e)
   }
 })
-
-export default router

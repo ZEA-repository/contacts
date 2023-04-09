@@ -1,8 +1,8 @@
 import { ApiError } from '@/exceptions/apiError.js'
-import tokenService from '@/service/tokenService.js'
+import { validateToken } from '@/service/tokenService.js'
 import { Request, Response, NextFunction } from 'express'
 
-const authMiddlewares = (req: Request, res: Response, next: NextFunction) => {
+export const authMiddlewares = (req: Request, res: Response, next: NextFunction) => {
   try {
     const autorizationHeader = req.headers.authorization
     if (!autorizationHeader) {
@@ -14,7 +14,7 @@ const authMiddlewares = (req: Request, res: Response, next: NextFunction) => {
       return next(ApiError.UnautorizedError())
     }
 
-    const userData = tokenService.validateAccessToken(accessToken)
+    const userData = validateToken(accessToken, process.env.JWT_ACCESS_SECRET as string)
 
     if (!userData) {
       return next(ApiError.UnautorizedError())
@@ -27,5 +27,3 @@ const authMiddlewares = (req: Request, res: Response, next: NextFunction) => {
     next(ApiError.UnautorizedError())
   }
 }
-
-export default { authMiddlewares }
