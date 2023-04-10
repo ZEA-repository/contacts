@@ -1,2 +1,4 @@
-export * from './authRoute'
-export * from './userRoute'
+import { authRoute } from './authRoute'
+import { userRoute } from './userRoute'
+
+export { authRoute, userRoute }

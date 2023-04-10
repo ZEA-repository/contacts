@@ -1,5 +1,5 @@
 import { Request, Response, Router, NextFunction } from 'express'
-import { registration, activate, login, logout, refresh } from '@/service/userService.js'
+import { registration, activate, login, logout, refresh } from '@/service/userService'
 
 export const authRoute = Router()
 

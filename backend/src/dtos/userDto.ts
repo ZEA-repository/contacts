@@ -1,4 +1,4 @@
-import type { IUserDto } from '@/types/user.js'
+import type { IUserDto } from '@/types/user'
 
 export default class UserDto {
   email

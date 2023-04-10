@@ -1,8 +1,8 @@
 import mongoose from 'mongoose'
 import { NextFunction, Request, Response, Router } from 'express'
-import UserModel from '@/models/userModel.js'
-import { getAllUsers } from '@/service/userService.js'
-import { authMiddlewares } from '@/middlewares/authMiddlewares.js'
+import UserModel from '@/models/userModel'
+import { getAllUsers } from '@/service/userService'
+import { authMiddlewares } from '@/middlewares/authMiddlewares'
 
 export const userRoute = Router()
 

@@ -1,12 +1,12 @@
-import UserModel from '@/models/userModel.js'
-import MailService from '@/service/mailService.js'
-import { generateTokens, saveToken, removeToken, validateToken, findToken } from '@/service/tokenService.js'
-import UserDto from '@/dtos/userDto.js'
+import UserModel from '@/models/userModel'
+import MailService from '@/service/mailService'
+import { generateTokens, saveToken, removeToken, validateToken, findToken } from '@/service/tokenService'
+import UserDto from '@/dtos/userDto'
 import bcrypt from 'bcrypt'
 import { v4 as uuidv4 } from 'uuid'
 
-import { ApiError } from '@/exceptions/apiError.js'
-// import type { IUserModel } from '@/types/user.js'
+import { ApiError } from '@/exceptions/apiError'
+// import type { IUserModel } from '@/types/user'
 
 export const userDtoWithTokens = async (user: any) => {
   const userDto = new UserDto(user)

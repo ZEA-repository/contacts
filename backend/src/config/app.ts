@@ -4,18 +4,16 @@ import setRoutes from './useRoutes'
 import { connect } from 'mongoose'
 import express from 'express'
 
-import { errorMiddlewares } from '@/middlewares/errorMiddlewares.js'
+import { errorMiddlewares } from '@/middlewares/errorMiddlewares'
 
 const app = express()
-const main = async () => {
+setupMiddlewares(app)
+setRoutes(app)
+app.use(errorMiddlewares)
+async function main() {
   await connect(process.env.MONGO_URL as string)
-  setupMiddlewares(app)
-  setRoutes(app)
-  app.use(errorMiddlewares)
 }
 
-main().catch((err) => {
-  console.log(err)
-})
+main().catch(console.log)
 
 export default app

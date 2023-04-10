@@ -16,5 +16,8 @@
         }
       }
     ]
-  ]
+  ],
+  "ignore": ["node_modules"],
+  "comments": false,
+  "minified": true
 }

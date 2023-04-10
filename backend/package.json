@@ -3,14 +3,13 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "start": "npm run build && node build/index",
-    "dev": "npx nodemon --ignore build/",
+    "dev": "nodemon",
+    "start": "npm run build && ts-node build/server.js",
     "build": "rm -rf ./build && npx tsc",
     "lint": "npx eslint ./src",
     "format": "npx eslint ./src --fix"
   },
-  "main": "index.js",
-  "type": "module",
+  "main": "server.js",
   "husky": {
     "hooks": {
       "pre-commit": ""
@@ -40,7 +39,9 @@
     "nodemon": "^2.0.22",
     "prettier": "^2.8.7",
     "ts-node": "^10.9.1",
-    "typescript": "^4.9.5"
+    "tsc-watch": "^6.0.0",
+    "tsconfig-paths": "^4.2.0",
+    "typescript": "^5.0.4"
   },
   "dependencies": {
     "@types/nodemailer": "^6.4.7",
