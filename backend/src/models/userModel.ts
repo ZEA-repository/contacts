@@ -8,6 +8,7 @@ const userSchema = new Schema<IUserModel>({
   email: {
     type: String,
     unique: true,
+    require: true,
   },
   password: {
     type: String,
@@ -22,7 +23,6 @@ const userSchema = new Schema<IUserModel>({
   },
   phone: {
     type: String,
-    unique: true,
   },
   avatar: {
     type: String,

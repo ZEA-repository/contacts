@@ -1,9 +1,7 @@
 import setupMiddlewares from './useMiddlewares'
 import setRoutes from './useRoutes'
-
 import { connect } from 'mongoose'
 import express from 'express'
-
 import { errorMiddlewares } from '@/middlewares/errorMiddlewares'
 
 const app = express()

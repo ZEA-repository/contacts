@@ -1,5 +1,5 @@
 import UserModel from '@/models/userModel'
-import MailService from '@/service/mailService'
+import { sendActivationMail } from '@/service/mailService'
 import { generateTokens, saveToken, removeToken, validateToken, findToken } from '@/service/tokenService'
 import UserDto from '@/dtos/userDto'
 import bcrypt from 'bcrypt'
@@ -26,10 +26,11 @@ export const registration = async (email: string, password: string) => {
   }
 
   const encryptPassword = await bcrypt.hash(password, 3)
+
   const activationLink = uuidv4()
   const user = await UserModel.create({ email, password: encryptPassword, activationLink })
 
-  await (MailService as any).sendActivationMail(email, `${process.env.API_URL}/activate/${activationLink}`)
+  await sendActivationMail(email, `${process.env.API_URL}/activate/${activationLink}`)
 
   const response = await userDtoWithTokens(user)
   return response
@@ -50,7 +51,10 @@ export const login = async (email: string, password: string) => {
   if (!user) {
     throw new (ApiError as any).BadRequest(`User ${email} not found`)
   }
-  const isPasswordEquals = await bcrypt.compare(password, user.password as string)
+  console.log('🚀 ~ file: userService.ts:49 ~ login ~ user.password:', user.password)
+
+  const isPasswordEquals = await bcrypt.compare(password, user.password)
+
   if (!isPasswordEquals) {
     throw ApiError.BadRequest('incorrect password')
   }
@@ -76,8 +80,6 @@ export const refresh = async (refreshToken: string) => {
     throw ApiError.UnautorizedError()
   }
   const user = await UserModel.findById(userData)
-  //FIXME
-  // const user = await UserModel.findById(userData.id)
   const response = await userDtoWithTokens(user)
   return response
 }

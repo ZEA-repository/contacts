@@ -1,4 +1,4 @@
-import mongoose from 'mongoose'
+import { Schema } from 'mongoose'
 import { NextFunction, Request, Response, Router } from 'express'
 import UserModel from '@/models/userModel'
 import { getAllUsers } from '@/service/userService'
@@ -17,7 +17,7 @@ userRoute.get('/users', authMiddlewares, async (_, res: Response, next: NextFunc
 
 userRoute.put('/user/:id', async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const userId = new mongoose.Types.ObjectId(req.params.id)
+    const userId = new Schema.Types.ObjectId(req.params.id)
     const user = await UserModel.findById(userId)
     if (user) {
       user.name = req.body.name || user.name
@@ -47,7 +47,7 @@ userRoute.post('/user', async (req: Request, res: Response, next: NextFunction) 
 
 userRoute.delete('/user/:id', async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const userId = new mongoose.Types.ObjectId(req.params.id)
+    const userId = new Schema.Types.ObjectId(req.params.id)
     const user = await UserModel.findById({ _id: userId })
     return user ? user.deleteOne() : res.send({ message: 'UserModel cannot be deleted' })
   } catch (e) {
