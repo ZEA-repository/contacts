@@ -4,11 +4,10 @@ import { generateTokens, saveToken, removeToken, validateToken, findToken } from
 import UserDto from '@/dtos/userDto'
 import bcrypt from 'bcrypt'
 import { v4 as uuidv4 } from 'uuid'
-
 import { ApiError } from '@/exceptions/apiError'
-// import type { IUserModel } from '@/types/user'
+import type { IUserDto } from '@/types/user'
 
-export const userDtoWithTokens = async (user: any) => {
+export const userDtoWithTokens = async (user: IUserDto) => {
   const userDto = new UserDto(user)
   const tokens = await generateTokens({ ...userDto })
   await saveToken(userDto.id, tokens.refreshToken)
@@ -22,7 +21,7 @@ export const registration = async (email: string, password: string) => {
   const guest = await UserModel.findOne({ email })
 
   if (guest) {
-    throw new (ApiError as any).BadRequest(`email: ${email} already exist`)
+    throw ApiError.BadRequest(`email: ${email} already exist`)
   }
 
   const encryptPassword = await bcrypt.hash(password, 3)
@@ -39,7 +38,7 @@ export const registration = async (email: string, password: string) => {
 export const activate = async (activationLink: string) => {
   const user = await UserModel.findOne({ activationLink })
   if (!user) {
-    throw new (ApiError as any).BadRequest(`incorrect activation link`)
+    throw ApiError.BadRequest(`incorrect activation link`)
   }
   user.isActivated = true
   await user.save()
@@ -49,9 +48,8 @@ export const login = async (email: string, password: string) => {
   const user = await UserModel.findOne({ email })
 
   if (!user) {
-    throw new (ApiError as any).BadRequest(`User ${email} not found`)
+    throw ApiError.BadRequest(`User ${email} not found`)
   }
-  console.log('🚀 ~ file: userService.ts:49 ~ login ~ user.password:', user.password)
 
   const isPasswordEquals = await bcrypt.compare(password, user.password)
 
@@ -80,6 +78,7 @@ export const refresh = async (refreshToken: string) => {
     throw ApiError.UnautorizedError()
   }
   const user = await UserModel.findById(userData)
+  if (!user) return
   const response = await userDtoWithTokens(user)
   return response
 }

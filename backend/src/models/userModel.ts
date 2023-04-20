@@ -25,7 +25,10 @@ const userSchema = new Schema<IUserModel>({
     type: String,
   },
   avatar: {
-    type: String,
+    url: {
+      type: String,
+      default: 'https://source.unsplash.com/44x44/?person',
+    },
   },
 })
 

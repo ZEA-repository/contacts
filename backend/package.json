@@ -12,7 +12,7 @@
   "main": "server.js",
   "husky": {
     "hooks": {
-      "pre-commit": ""
+      "pre-commit": "npx eslint ./src"
     }
   },
   "keywords": [],

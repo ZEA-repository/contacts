@@ -5,7 +5,6 @@ export interface IUserDto {
 }
 
 export interface IUserModel extends IUserDto {
-  id: any
   name: string
   email: string
   password: string
