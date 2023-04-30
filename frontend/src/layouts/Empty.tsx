@@ -1,11 +1,9 @@
 import { Outlet } from 'react-router-dom'
 import { AppShell } from '@mantine/core'
-import { CustomHeader } from '@/components/Header'
 
-export default function MainLayout() {
+export default function EmptyLayout() {
   return (
     <AppShell>
-      <CustomHeader />
       <Outlet />
     </AppShell>
   )
