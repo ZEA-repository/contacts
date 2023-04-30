@@ -1,4 +1,4 @@
-import { Title, Box, Button, Modal } from '@mantine/core'
+import { Box, Button, Modal } from '@mantine/core'
 import { UsersTable } from '@/components/UsersTable'
 import { UserForm } from '@/components/UserForm'
 import Centered from '@/layouts/Centered'
@@ -45,9 +45,6 @@ export function ContactsPage() {
   return (
     <Centered>
       <Box mt='md'>
-        <Title mb='md' order={2}>
-          Contacts
-        </Title>
         <UsersTable
           users={users}
           activeUserId={user?._id}
