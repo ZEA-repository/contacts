@@ -24,6 +24,10 @@ const userSchema = new Schema<IUserModel>({
   phone: {
     type: String,
   },
+  terms: {
+    type: Boolean,
+    default: false,
+  },
   avatar: {
     url: {
       type: String,
