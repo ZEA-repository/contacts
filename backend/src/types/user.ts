@@ -12,4 +12,12 @@ export interface IUserModel extends IUserDto {
   activationLink: string
   phone: string
   avatar: string
+  terms: boolean
+}
+export interface Registration {
+  name: string
+  email: string
+  password: string
+  phone: string
+  terms: boolean
 }

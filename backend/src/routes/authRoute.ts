@@ -15,8 +15,7 @@ function setCookie(res: Response, userData: { user?: UserDto } & ITokens): void 
 
 authRoute.post('/registration', async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { email, password } = req.body
-    const userData = await registration(email, password)
+    const userData = await registration(req.body)
     setCookie(res, userData)
 
     return res.json(userData)
