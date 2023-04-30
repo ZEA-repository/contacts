@@ -82,7 +82,7 @@ const useStyles = createStyles((theme) => ({
 }))
 
 interface Props {
-  links: { href: string; label: string }[]
+  links?: { href: string; label: string }[]
 }
 
 export function CustomHeader({ links }: Props) {
@@ -90,7 +90,7 @@ export function CustomHeader({ links }: Props) {
   const [drawerOpened, { toggle: toggleDrawer, close: closeDrawer }] =
     useDisclosure(false)
   const { classes, cx, theme } = useStyles()
-  const items = links.map((link) => (
+  const items = links?.map((link) => (
     <Link
       key={link.label}
       to={link.href}

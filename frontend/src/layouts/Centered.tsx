@@ -5,7 +5,7 @@ export default function Centered(props: ContainerProps) {
   const { classes } = useStyles()
 
   return (
-    <Container {...props} className={classes.container} >
+    <Container {...props} className={classes.container}>
       {props.children}
     </Container>
   )
