@@ -13,7 +13,7 @@ import {
   // CheckboxProps,
 } from '@mantine/core'
 import { useDisclosure } from '@mantine/hooks'
-import { createUserRequest } from '@/api'
+import { createUserRequest } from '@/api/userApi'
 import type { Registration } from '@/types'
 import { errorMessages } from '@/utils/validateForm'
 import { Link } from 'react-router-dom'
@@ -27,8 +27,8 @@ export function RegistrationForm(props: PaperProps) {
   const [visible, { toggle }] = useDisclosure(false)
   const form = useForm<Registration>({
     initialValues: {
-      email: '',
-      name: '',
+      login: '',
+      username: '',
       phone: '',
       password: '',
       passwordConfirm: '',
@@ -36,7 +36,7 @@ export function RegistrationForm(props: PaperProps) {
     },
 
     validate: {
-      email: validateEmail,
+      login: validateEmail,
       password: validatePassword,
       passwordConfirm: validatePasswordConfirm,
     },
@@ -59,11 +59,11 @@ export function RegistrationForm(props: PaperProps) {
             data-autofocus
             label='Email'
             placeholder='hello@mantine.dev'
-            value={form.values.email}
+            value={form.values.login}
             onChange={(event) =>
-              form.setFieldValue('email', event.currentTarget.value)
+              form.setFieldValue('login', event.currentTarget.value)
             }
-            error={form.errors.email && 'Invalid email'}
+            error={form.errors.login && 'Invalid email'}
             radius='md'
           />
 
@@ -93,17 +93,17 @@ export function RegistrationForm(props: PaperProps) {
           />
 
           <TextInput
-            label='Name'
-            placeholder='Your name'
-            value={form.values.name}
+            label='Username'
+            placeholder='username'
+            value={form.values.username}
             onChange={(event) =>
-              form.setFieldValue('name', event.currentTarget.value)
+              form.setFieldValue('username', event.currentTarget.value)
             }
             radius='md'
           />
 
           <TextInput
-            label='phone'
+            label='Phone'
             placeholder='Your phone'
             size='md'
             type='tel'

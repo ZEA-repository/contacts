@@ -60,13 +60,13 @@ export function UsersTable({
         <Group spacing='sm'>
           <Avatar size={30} src={user.avatar} radius={30} />
           <Text fz='sm' fw={500}>
-            {user.name}
+            {user.username}
           </Text>
         </Group>
       </td>
       <td>
         <Anchor component='button' size='sm'>
-          {user.email}
+          {user.login}
         </Anchor>
       </td>
       <td>

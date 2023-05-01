@@ -20,8 +20,8 @@ userRoute.put('/user/:id', async (req: Request, res: Response, next: NextFunctio
     const userId = new Schema.Types.ObjectId(req.params.id)
     const user = await UserModel.findById(userId)
     if (user) {
-      user.name = req.body.name || user.name
-      user.email = req.body.email || user.email
+      user.username = req.body.username || user.username
+      user.login = req.body.login || user.login
       user.phone = req.body.phone || user.phone
       const updatedUser = await user.save()
       res.send({ ...updatedUser })
@@ -33,10 +33,10 @@ userRoute.put('/user/:id', async (req: Request, res: Response, next: NextFunctio
 
 userRoute.post('/user', async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { name, email, phone } = req.body
+    const { username, login, phone } = req.body
     const user = new UserModel({
-      name,
-      email,
+      username,
+      login,
       phone,
     })
     res.send(await user.save())

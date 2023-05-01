@@ -3,6 +3,7 @@ import { useForm } from '@mantine/form'
 import { useEffect } from 'react'
 import type { User } from '@/types'
 import { IconDeviceFloppy } from '@tabler/icons-react'
+import { validateEmail, validateUsername } from '@/utils/validateForm'
 
 type UserFormType = Omit<User, '_id' | 'avatar'>
 interface Props {
@@ -34,14 +35,13 @@ export const UserForm: React.FC<Props> = ({ user, onSubmit }) => {
   const { classes } = useStyles()
   const form = useForm<UserFormType>({
     initialValues: {
-      name: '',
-      email: '',
+      username: '',
+      login: '',
       phone: '',
     },
     validate: {
-      // name:  (value) => (value.length < 2 ? 'Name must have at least 2 letters' : ''),
-      // email: (value) => (/^\S+@\S+$/.test(value) ? null : 'Invalid email'),
-      // phone: (value) => (),
+      login: validateEmail,
+      username: validateUsername,
     },
   })
   useEffect(() => {
@@ -51,22 +51,22 @@ export const UserForm: React.FC<Props> = ({ user, onSubmit }) => {
   return (
     <form onSubmit={form.onSubmit((user) => onSubmit(user))}>
       <TextInput
-        label='name'
+        label='Username'
         placeholder='John Doe'
         classNames={classes}
-        {...form.getInputProps('name')}
+        {...form.getInputProps('username')}
       />
 
       <TextInput
-        label='email'
+        label='Email'
         placeholder='your@email.com'
         classNames={classes}
-        {...form.getInputProps('email')}
+        {...form.getInputProps('login')}
       />
 
       <TextInput
-        label='phone'
-        placeholder='xx-xxx-xxx-xx-xx'
+        label='Phone'
+        placeholder='Your phone'
         classNames={classes}
         {...form.getInputProps('phone')}
       />

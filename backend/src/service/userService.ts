@@ -18,19 +18,19 @@ export const userDtoWithTokens = async (user: IUserDto) => {
 }
 
 export const registration = async (args: Registration) => {
-  const { email, password, name, phone, terms } = args
-  const guest = await UserModel.findOne({ email })
+  const { login, password, username, phone, terms } = args
+  const guest = await UserModel.findOne({ login })
 
   if (guest) {
-    throw ApiError.BadRequest(`email: ${email} already exist`)
+    throw ApiError.BadRequest(`login ${login} already exist`)
   }
 
   const encryptPassword = await bcrypt.hash(password, 3)
 
   const activationLink = uuidv4()
-  const user = await UserModel.create({ email, password: encryptPassword, activationLink, name, phone, terms })
+  const user = await UserModel.create({ login, password: encryptPassword, activationLink, username, phone, terms })
 
-  await sendActivationMail(email, `${process.env.API_URL}/activate/${activationLink}`)
+  await sendActivationMail(login, `${process.env.API_URL}/activate/${activationLink}`)
 
   const response = await userDtoWithTokens(user)
   return response
@@ -45,11 +45,11 @@ export const activate = async (activationLink: string) => {
   await user.save()
 }
 
-export const login = async (email: string, password: string) => {
-  const user = await UserModel.findOne({ email })
+export const authentication = async (login: string, password: string) => {
+  const user = await UserModel.findOne({ login })
 
   if (!user) {
-    throw ApiError.BadRequest(`User ${email} not found`)
+    throw ApiError.BadRequest(`User ${login} not found`)
   }
 
   const isPasswordEquals = await bcrypt.compare(password, user.password)

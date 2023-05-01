@@ -1,5 +1,5 @@
 import { Request, Response, Router, NextFunction } from 'express'
-import { registration, activate, login, logout, refresh } from '@/service/userService'
+import { registration, activate, authentication, logout, refresh } from '@/service/userService'
 import type { ITokens } from '@/types/token'
 import type UserDto from '@/dtos/userDto'
 
@@ -36,8 +36,8 @@ authRoute.get('/activate/:link', async (req: Request, res: Response, next: NextF
 
 authRoute.post('/login', async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { email, password } = req.body
-    const userData = await login(email, password)
+    const { login, password } = req.body
+    const userData = await authentication(login, password)
     setCookie(res, userData)
     return res.json(userData)
   } catch (e) {

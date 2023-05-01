@@ -1,12 +1,12 @@
 export interface IUserDto {
-  email: string
+  login: string
   _id: string
   isActivated: boolean
 }
 
 export interface IUserModel extends IUserDto {
-  name: string
-  email: string
+  username: string
+  login: string
   password: string
   isActivated: boolean
   activationLink: string
@@ -15,8 +15,8 @@ export interface IUserModel extends IUserDto {
   terms: boolean
 }
 export interface Registration {
-  name: string
-  email: string
+  username: string
+  login: string
   password: string
   phone: string
   terms: boolean

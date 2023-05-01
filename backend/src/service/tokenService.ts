@@ -2,7 +2,7 @@ import TokenModel from '@/models/tokenModel'
 import { sign, verify } from 'jsonwebtoken'
 
 interface Payload {
-  email: string
+  login: string
   id: string
   isActivated: boolean
 }

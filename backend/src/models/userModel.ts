@@ -2,10 +2,10 @@ import { Schema, model } from 'mongoose'
 import type { IUserModel } from '@/types/user'
 
 const userSchema = new Schema<IUserModel>({
-  name: {
+  username: {
     type: String,
   },
-  email: {
+  login: {
     type: String,
     unique: true,
     require: true,
