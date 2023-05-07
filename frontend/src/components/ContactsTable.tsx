@@ -42,7 +42,7 @@ const useStyles = createStyles((theme) => ({
   },
 }))
 
-export function UsersTable({
+export function ContactsTable({
   users,
   activeUserId,
   setUser,

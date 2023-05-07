@@ -13,7 +13,7 @@ import {
   // CheckboxProps,
 } from '@mantine/core'
 import { useDisclosure } from '@mantine/hooks'
-import { createUserRequest } from '@/api/userApi'
+import { createUserRequest } from '@/api/user'
 import type { Registration } from '@/types'
 import { errorMessages } from '@/utils/validateForm'
 import { Link } from 'react-router-dom'
@@ -63,7 +63,7 @@ export function RegistrationForm(props: PaperProps) {
             onChange={(event) =>
               form.setFieldValue('login', event.currentTarget.value)
             }
-            error={form.errors.login && 'Invalid email'}
+            error={form.errors.login && errorMessages.login}
             radius='md'
           />
 

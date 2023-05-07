@@ -11,10 +11,15 @@ import {
   Divider,
   Flex,
   Center,
+  ActionIcon,
+  Tooltip,
 } from '@mantine/core'
 import { useDisclosure } from '@mantine/hooks'
 import Centered from '@/layouts/Centered'
-import { Link, useLocation } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
+import { IconLogout } from '@tabler/icons-react'
+
+import { logoutRequest } from '@/api/auth'
 
 const useStyles = createStyles((theme) => ({
   links: {
@@ -87,6 +92,7 @@ interface Props {
 
 export function CustomHeader({ links }: Props) {
   const { pathname } = useLocation()
+  const navigate = useNavigate()
   const [drawerOpened, { toggle: toggleDrawer, close: closeDrawer }] =
     useDisclosure(false)
   const { classes, cx, theme } = useStyles()
@@ -109,18 +115,36 @@ export function CustomHeader({ links }: Props) {
       🧸 Contacts
     </UnstyledButton>
   )
+
+  const handleLogout = async () => {
+    await logoutRequest()
+    navigate('/login')
+  }
+
+  const logout = (
+    <Tooltip
+      label='Logout'
+      position='right'
+      transitionProps={{ duration: 500 }}
+      className={classes.hiddenMobile}
+    >
+      <Button onClick={handleLogout} variant='default'>
+        <ActionIcon variant='subtle' aria-label='Logout'>
+          <IconLogout size='1.5rem' />
+        </ActionIcon>
+      </Button>
+    </Tooltip>
+  )
+
   return (
     <>
       <Header height={rem(60)} p='xs'>
         <Centered>
           <Group position='apart' sx={{ height: '100%' }}>
             {logo}
-
             <Group className={classes.hiddenMobile}>{items}</Group>
-            <Button.Group className={classes.hiddenMobile}>
-              <Button variant='default'>Log in</Button>
-              <Button>Sign up</Button>
-            </Button.Group>
+            {logout}
+
             <Burger
               opened={drawerOpened}
               onClick={toggleDrawer}
@@ -152,15 +176,14 @@ export function CustomHeader({ links }: Props) {
               {items}
             </Flex>
           </Center>
-
           <Divider
             my='sm'
             color={theme.colorScheme === 'dark' ? 'dark.5' : 'gray.1'}
           />
-          <Group position='center' grow pb='xl' px='md'>
-            <Button variant='default'>Log in</Button>
-            <Button>Sign up</Button>
-          </Group>
+
+          <Button variant='default' type='submit' onClick={handleLogout}>
+            Logout
+          </Button>
         </ScrollArea>
       </Drawer>
     </>

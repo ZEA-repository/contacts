@@ -1,11 +1,15 @@
 import { Box, Button, Modal } from '@mantine/core'
-import { UsersTable } from '@/components/UsersTable'
-import { UserForm } from '@/components/UserForm'
+import { ContactsTable } from '@/components/ContactsTable'
+import { ContactForm } from '@/components/ContactForm'
 import Centered from '@/layouts/Centered'
 import { useLoaderData } from 'react-router-dom'
 import { useState } from 'react'
 import { IconUserPlus } from '@tabler/icons-react'
-import { deleteUserRequest, createUserRequest, updateUserRequest } from '@/api'
+import {
+  deleteUserRequest,
+  createUserRequest,
+  updateUserRequest,
+} from '@/api/user'
 import type { User } from '@/types'
 
 export function ContactsPage() {
@@ -18,13 +22,18 @@ export function ContactsPage() {
     setUser(user)
     setMode('update')
   }
-  const onCreate = (user: User) => {
-    createUserRequest(user).then((response) =>
-      response.json().then((newUser) => {
-        setUsers([...users, { ...user, _id: newUser._id }])
-        close()
-      })
-    )
+  const onCreate = async (user: User) => {
+    console.log('🚀 ~ file: contacts.tsx:26 ~ onCreate ~ user:', user)
+    // const data = await createUserRequest(user)
+    await createUserRequest(user)
+    // console.log("🚀 ~ file: contacts.tsx:27 ~ onCreate ~ data:", data)
+    // return
+    //   .then((response) =>
+    //   response.json().then((newUser) => {
+    //     setUsers([...users, { ...user, _id: newUser._id }])
+    //     close()
+    //   })
+    // )
   }
   const onUpdate = (user: User) => {
     updateUserRequest(user).then((response) =>
@@ -45,7 +54,7 @@ export function ContactsPage() {
   return (
     <Centered>
       <Box mt='md'>
-        <UsersTable
+        <ContactsTable
           users={users}
           activeUserId={user?._id}
           setUser={onSetUser}
@@ -64,7 +73,7 @@ export function ContactsPage() {
         onClose={close}
         title={mode == 'create' ? 'Add contact' : 'Edit contact'}
       >
-        <UserForm
+        <ContactForm
           user={user}
           onSubmit={mode == 'create' ? onCreate : onUpdate}
         />

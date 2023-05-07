@@ -1,4 +1,6 @@
 import nodemailer, { Transporter } from 'nodemailer'
+import UserModel from '../models/userModel'
+import { BadRequestError } from '../exceptions/apiError'
 
 const MailService = () => {
   return nodemailer.createTransport({
@@ -26,4 +28,13 @@ export const sendActivationMail = async (to: string, link: string) => {
           </div>
         `,
   })
+}
+
+export const activateAccountByLink = async (activationLink: string) => {
+  const user = await UserModel.findOne({ activationLink })
+  if (!user) {
+    throw new BadRequestError(`incorrect activation link`)
+  }
+  user.isActivated = true
+  await user.save()
 }

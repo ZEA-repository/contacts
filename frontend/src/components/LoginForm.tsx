@@ -10,27 +10,33 @@ import {
   Anchor,
   Stack,
 } from '@mantine/core'
-import { authentication } from '@/api'
+import { loginRequest } from '@/api/auth'
 import { errorMessages } from '@/utils/validateForm'
 import { Link } from 'react-router-dom'
 import type { Login } from '@/types'
 import { validateEmail, validatePassword } from '@/utils/validateForm'
+import { useNavigate } from 'react-router-dom'
+
+const baseUrl = import.meta.env.VITE_CLIENT_URL
 
 export function LoginForm(props: PaperProps) {
+  const navigate = useNavigate()
   const form = useForm<Login>({
     initialValues: {
-      email: '',
+      login: '',
       password: '',
     },
-
     validate: {
-      email: validateEmail,
+      login: validateEmail,
       password: validatePassword,
     },
   })
 
-  const handleSubmit = (values: Login) => {
-    return authentication(values, 'login')
+  const loginSubmit = async (values: Login) => {
+    const data = await loginRequest(values)
+    if (data.status === 200) {
+      navigate('/')
+    }
   }
 
   return (
@@ -39,18 +45,18 @@ export function LoginForm(props: PaperProps) {
         Login
       </Text>
 
-      <form onSubmit={form.onSubmit(handleSubmit)}>
+      <form onSubmit={form.onSubmit(loginSubmit)}>
         <Stack>
           <TextInput
             required
             data-autofocus
             label='Email'
             placeholder='hello@mantine.dev'
-            value={form.values.email}
+            value={form.values.login}
             onChange={(event) =>
-              form.setFieldValue('email', event.currentTarget.value)
+              form.setFieldValue('login', event.currentTarget.value)
             }
-            error={form.errors.email && 'Invalid email'}
+            error={form.errors.login && errorMessages.login}
             radius='md'
           />
 

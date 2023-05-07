@@ -24,20 +24,28 @@ export const fetchUserById = async ({ params }: LoaderFunctionArgs) => {
   return fetcher(url)
 }
 
-export const createUserRequest = (user: Registration) => {
-  return fetch(`${baseUrl}/registration`, {
+export const createUserRequest = async (user: Registration) => {
+  const response = await fetch(`${baseUrl}/registration`, {
     method: 'POST',
     headers: {
       'Content-type': 'application/json',
     },
     body: JSON.stringify({
-      email: user.email,
-      name: user.name,
+      login: user.login,
+      username: user.username,
       phone: user.phone,
       password: user.password,
       terms: user.terms,
     }),
   })
+  try {
+    const data = await response.json()
+    console.log('🚀 ~ file: user.ts:43 ~ createUserRequest ~ data:', data)
+
+    return { status: response.status }
+  } catch (error) {
+    return { status: 400, error }
+  }
 }
 
 export const deleteUserRequest = (id: string) => {
@@ -52,18 +60,6 @@ export const deleteUserRequest = (id: string) => {
 export const updateUserRequest = async (user: User) => {
   return fetch(`${baseUrl}/user/${user._id}`, {
     method: 'PUT',
-    headers: {
-      'Content-type': 'application/json',
-    },
-    body: JSON.stringify(user),
-  })
-}
-export const authentication = async (
-  user: Registration | Login,
-  type: 'login' | 'logout'
-) => {
-  return fetch(`${baseUrl}/${type}`, {
-    method: 'POST',
     headers: {
       'Content-type': 'application/json',
     },

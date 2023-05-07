@@ -1,4 +1,4 @@
-import TokenModel from '@/models/tokenModel'
+import TokenModel from '../models/tokenModel'
 import { sign, verify } from 'jsonwebtoken'
 
 interface Payload {
@@ -7,8 +7,13 @@ interface Payload {
   isActivated: boolean
 }
 
+export interface ITokens {
+  accessToken: string
+  refreshToken: string
+}
+
 export const generateTokens = async (payload: Payload) => {
-  const accessToken = sign(payload, process.env.JWT_ACCESS_SECRET as string, { expiresIn: '30m' })
+  const accessToken = sign(payload, process.env.JWT_ACCESS_SECRET as string, { expiresIn: '15m' })
   const refreshToken = sign(payload, process.env.JWT_REFRESH_SECRET as string, { expiresIn: '30d' })
   return {
     accessToken,

@@ -1,41 +1,87 @@
-import { Schema, model } from 'mongoose'
-import type { IUserModel } from '@/types/user'
+import { Schema, model, Types } from 'mongoose'
+import type { IUserDto } from '../dtos/userDto'
 
-const userSchema = new Schema<IUserModel>({
-  username: {
-    type: String,
-  },
+export const DOCUMENT_NAME = 'User'
+export const COLLECTION_NAME = 'users'
+
+export interface Contact {
+  _id?: Types.ObjectId
+  firstname: string
+  email: string
+  phone: string
+  avatar: { url: string }
+}
+
+export interface User extends IUserDto {
+  username: string
+  login: string
+  password: string
+  isActivated: boolean
+  activationLink: string
+  phone: string
+  avatar: { url: string }
+  terms: boolean
+  contacts: Contact[]
+}
+
+const userSchema = new Schema<User>({
   login: {
-    type: String,
+    type: Schema.Types.String,
     unique: true,
     require: true,
+    trim: true,
   },
   password: {
-    type: String,
+    type: Schema.Types.String,
     require: true,
   },
   isActivated: {
-    type: Boolean,
+    type: Schema.Types.Boolean,
     default: false,
   },
   activationLink: {
-    type: String,
-  },
-  phone: {
-    type: String,
+    type: Schema.Types.String,
   },
   terms: {
-    type: Boolean,
+    type: Schema.Types.Boolean,
     default: false,
+  },
+  username: {
+    type: Schema.Types.String,
+    trim: true,
   },
   avatar: {
     url: {
-      type: String,
+      type: Schema.Types.String,
+      trim: true,
       default: 'https://source.unsplash.com/44x44/?person',
     },
   },
+  contacts: [
+    {
+      firstname: {
+        type: Schema.Types.String,
+        trim: true,
+      },
+      email: {
+        type: Schema.Types.String,
+        trim: true,
+      },
+      phone: {
+        type: Schema.Types.String,
+        trim: true,
+      },
+      avatar: {
+        url: {
+          type: Schema.Types.String,
+          trim: true,
+          default: 'https://source.unsplash.com/44x44/?person',
+        },
+      },
+    },
+  ],
 })
 
-const UserModel = model<IUserModel>('User', userSchema)
+const UserModel = model<User>(DOCUMENT_NAME, userSchema, COLLECTION_NAME)
 
 export default UserModel

@@ -10,6 +10,7 @@ import { RegistrationPage } from '@/pages/registration'
 import { ContactsPage } from '@/pages/contacts'
 import { RouterProvider } from 'react-router-dom'
 import { ThemeProvider } from '@/ThemeProvider'
+
 // import { fetchUsers } from '@/api'
 
 const router = createBrowserRouter(
@@ -29,6 +30,7 @@ const router = createBrowserRouter(
     </>
   )
 )
+
 export default function App() {
   return (
     <ThemeProvider>

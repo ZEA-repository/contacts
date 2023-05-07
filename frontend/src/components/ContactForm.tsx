@@ -31,7 +31,7 @@ const useStyles = createStyles((theme) => ({
   },
 }))
 
-export const UserForm: React.FC<Props> = ({ user, onSubmit }) => {
+export const ContactForm: React.FC<Props> = ({ user, onSubmit }) => {
   const { classes } = useStyles()
   const form = useForm<UserFormType>({
     initialValues: {
