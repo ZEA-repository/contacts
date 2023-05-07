@@ -6,7 +6,7 @@ import { sendActivationMail } from '../../service/mailService'
 import { userDtoWithTokens } from '../../dtos/userDto'
 import bcrypt from 'bcrypt'
 import { v4 as uuidv4 } from 'uuid'
-import { BadRequestError } from '../../exceptions/apiError'
+import { BadRequestError, NoDataError } from '../../exceptions/apiError'
 
 const router = Router()
 
@@ -32,6 +32,8 @@ router.post('/', async (req: Request, res: Response, next: NextFunction) => {
     await sendActivationMail(login, `${process.env.API_URL}/activate/${activationLink}`)
 
     const userData = await userDtoWithTokens(user)
+    if (!userData) throw new NoDataError()
+
     res.cookie('refreshToken', userData?.refreshToken, {
       maxAge: maxAgeCookie,
       httpOnly: true,
