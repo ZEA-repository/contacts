@@ -1,14 +1,13 @@
 import { TextInput, Button, rem, createStyles, Group } from '@mantine/core'
 import { useForm } from '@mantine/form'
 import { useEffect } from 'react'
-import type { User } from '@/types'
+import type { Contact, ContactFormType } from '@/types'
 import { IconDeviceFloppy } from '@tabler/icons-react'
 import { validateEmail, validateUsername } from '@/utils/validateForm'
 
-type UserFormType = Omit<User, '_id' | 'avatar'>
 interface Props {
-  user: User | undefined
-  onSubmit: (user: Partial<User>) => void
+  contact: Contact | undefined
+  onSubmit: (contact: ContactFormType) => void
 }
 
 const useStyles = createStyles((theme) => ({
@@ -31,44 +30,58 @@ const useStyles = createStyles((theme) => ({
   },
 }))
 
-export const ContactForm: React.FC<Props> = ({ user, onSubmit }) => {
+export const ContactForm: React.FC<Props> = ({ contact, onSubmit }) => {
   const { classes } = useStyles()
-  const form = useForm<UserFormType>({
+  const form = useForm<ContactFormType>({
     initialValues: {
-      username: '',
-      login: '',
+      firstname: '',
+      email: '',
       phone: '',
+      avatar: {
+        url: '',
+      },
     },
     validate: {
-      login: validateEmail,
-      username: validateUsername,
+      firstname: validateUsername,
+      email: validateEmail,
     },
   })
   useEffect(() => {
-    user ? form.setValues(user) : form.reset()
-  }, [user])
+    contact ? form.setValues(contact) : form.reset()
+  }, [contact])
 
   return (
-    <form onSubmit={form.onSubmit((user) => onSubmit(user))}>
+    <form onSubmit={form.onSubmit((contact) => onSubmit(contact))}>
       <TextInput
-        label='Username'
+        label='firstname'
         placeholder='John Doe'
         classNames={classes}
-        {...form.getInputProps('username')}
+        {...form.getInputProps('firstname')}
       />
 
       <TextInput
-        label='Email'
+        label='email'
         placeholder='your@email.com'
         classNames={classes}
-        {...form.getInputProps('login')}
+        {...form.getInputProps('email')}
       />
 
       <TextInput
-        label='Phone'
+        label='phone'
         placeholder='Your phone'
         classNames={classes}
         {...form.getInputProps('phone')}
+      />
+
+      <TextInput
+        label='Avatar URL'
+        placeholder='https://examples.com/img.jpg'
+        classNames={classes}
+        value={form.values.avatar?.url}
+        onChange={(event) =>
+          form.setFieldValue('avatar.url', event.currentTarget.value)
+        }
+        radius='md'
       />
 
       <Group mt='md'>

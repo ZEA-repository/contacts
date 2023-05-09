@@ -17,7 +17,7 @@ export const authentication = async (login: string, password: string) => {
   return response
 }
 
-export const logout = async (refreshToken: string) => {
+export const logout = async (refreshToken: string | undefined) => {
   const token = await removeToken(refreshToken)
   return token
 }
@@ -26,11 +26,12 @@ export const refresh = async (refreshToken: string) => {
   if (!refreshToken) throw new AuthFailureError('Authentication failure')
 
   const userData = validateToken(refreshToken, process.env.JWT_REFRESH_SECRET as string)
-  const tokenFromDb = await findToken(refreshToken)
+  if (!userData) throw new AuthFailureError('Authentication failure')
 
-  if (!userData || !tokenFromDb) throw new AuthFailureError('Authentication failure')
-
-  const user = await UserModel.findById(userData)
+  await findToken(refreshToken)
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  const user = await UserModel.findById(userData.id)
   if (!user) throw new BadRequestError('User not found')
 
   const response = await userDtoWithTokens(user)

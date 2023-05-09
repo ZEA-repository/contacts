@@ -4,36 +4,52 @@ import Cookies from 'js-cookie'
 const baseUrl = import.meta.env.VITE_API_URL
 
 export const loginRequest = async (user: Login) => {
-  const response = await fetch(`${baseUrl}/login`, {
-    method: 'POST',
-    headers: {
-      'Content-type': 'application/json',
-    },
-    body: JSON.stringify(user),
-  })
   try {
+    const response = await fetch(`${baseUrl}/login`, {
+      method: 'POST',
+      headers: {
+        'Content-type': 'application/json',
+      },
+      credentials: 'include',
+      body: JSON.stringify(user),
+    })
     const data = await response.json()
 
     if (response.ok) {
       Cookies.set('accessToken', data.accessToken)
       Cookies.set('refreshToken', data.refreshToken)
     }
+    //TODO: убрать юзера из ответа
     return { status: response.status, data: data.user }
   } catch (error) {
-    return { status: 400, data: null, error }
+    return { status: 401, data: {}, error }
   }
 }
+
 export const logoutRequest = async () => {
-  console.log('logoutRequest')
   const response = await fetch(`${baseUrl}/logout`, {
     method: 'POST',
-    headers: {
-      'Content-type': 'application/json',
-    },
-    body: JSON.stringify({ refreshToken: Cookies.get('refreshToken') }),
+    credentials: 'include',
   })
 
-  const data = await response.json()
+  Cookies.remove('accessToken')
 
-  if (data.acknowledged) Cookies.remove('accessToken')
+  return { status: response.status }
+}
+
+export const checkAuthRequest = async () => {
+  try {
+    const response = await fetch(`${baseUrl}/token/refresh`, {
+      method: 'GET',
+      credentials: 'include',
+      headers: {
+        // SameSite: 'Strict',
+      },
+    })
+    const data = await response.json()
+
+    return { status: response.status, data }
+  } catch (error) {
+    return { status: 401, error }
+  }
 }

@@ -1,12 +1,12 @@
 export const errorMessages = {
-  login: 'Invalid email',
+  email: 'Invalid email',
   username: 'U must have at least 2 letters',
   password: 'Password should include at least 6 characters',
   passwordConfirm: 'Passwords did not match',
 }
 
 export const validateEmail = (value: string) =>
-  /^\S+@\S+$/.test(value) ? null : errorMessages.login
+  /^\S+@\S+$/.test(value) ? null : errorMessages.email
 
 export const validateUsername = (value: string) =>
   value.length < 2 ? errorMessages.username : ''

@@ -17,8 +17,6 @@ import type { Login } from '@/types'
 import { validateEmail, validatePassword } from '@/utils/validateForm'
 import { useNavigate } from 'react-router-dom'
 
-const baseUrl = import.meta.env.VITE_CLIENT_URL
-
 export function LoginForm(props: PaperProps) {
   const navigate = useNavigate()
   const form = useForm<Login>({
@@ -56,7 +54,7 @@ export function LoginForm(props: PaperProps) {
             onChange={(event) =>
               form.setFieldValue('login', event.currentTarget.value)
             }
-            error={form.errors.login && errorMessages.login}
+            error={form.errors.login && errorMessages.email}
             radius='md'
           />
 

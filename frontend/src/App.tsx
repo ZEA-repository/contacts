@@ -10,8 +10,8 @@ import { RegistrationPage } from '@/pages/registration'
 import { ContactsPage } from '@/pages/contacts'
 import { RouterProvider } from 'react-router-dom'
 import { ThemeProvider } from '@/ThemeProvider'
-
-// import { fetchUsers } from '@/api'
+import { RequireAuth } from '@/components/RequireAuth'
+import { fetchUserByRefreshToken } from '@/api/user'
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -19,8 +19,12 @@ const router = createBrowserRouter(
       <Route path='/' element={<MainLayout />}>
         <Route
           index
-          element={<ContactsPage />}
-          // loader={fetchUsers}
+          element={
+            <RequireAuth>
+              <ContactsPage />
+            </RequireAuth>
+          }
+          loader={fetchUserByRefreshToken}
         />
       </Route>
       <Route path='/' element={<EmptyLayout />}>

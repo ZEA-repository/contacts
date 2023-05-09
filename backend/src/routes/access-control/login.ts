@@ -8,7 +8,7 @@ import { BadRequestError, AuthFailureError, NoDataError } from '../../exceptions
 
 const router = Router()
 
-router.post('/login', async (req: Request, res: Response, next: NextFunction) => {
+router.post('/', async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { login, password } = req.body
     const user = await UserModel.findOne({ login })

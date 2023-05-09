@@ -6,59 +6,64 @@ import { useLoaderData } from 'react-router-dom'
 import { useState } from 'react'
 import { IconUserPlus } from '@tabler/icons-react'
 import {
-  deleteUserRequest,
-  createUserRequest,
-  updateUserRequest,
-} from '@/api/user'
-import type { User } from '@/types'
+  deleteContactRequest,
+  createContactRequest,
+  updateContactRequest,
+} from '@/api/phoneBook'
+import type { User, Contact, ContactFormType } from '@/types'
 
 export function ContactsPage() {
-  const initialUsers = useLoaderData() as User[]
-  const [users, setUsers] = useState<User[]>(initialUsers)
-  const [user, setUser] = useState<User>()
+  const loadedUser = useLoaderData() as User
+
+  const [contacts, setContacts] = useState<Contact[]>(loadedUser.contacts)
+  const [contact, setContact] = useState<Contact>()
   const [mode, setMode] = useState<'create' | 'update'>()
 
-  const onSetUser = (user: User) => {
-    setUser(user)
+  const onSetContact = (contact: Contact) => {
+    setContact(contact)
     setMode('update')
   }
-  const onCreate = async (user: User) => {
-    console.log('🚀 ~ file: contacts.tsx:26 ~ onCreate ~ user:', user)
-    // const data = await createUserRequest(user)
-    await createUserRequest(user)
-    // console.log("🚀 ~ file: contacts.tsx:27 ~ onCreate ~ data:", data)
-    // return
-    //   .then((response) =>
-    //   response.json().then((newUser) => {
-    //     setUsers([...users, { ...user, _id: newUser._id }])
-    //     close()
-    //   })
-    // )
+  const onCreate = async (contact: ContactFormType) => {
+    const data = await createContactRequest({
+      ...contact,
+      userId: loadedUser._id,
+    })
+    if (data.status === 200) setContacts([{ ...data.user }, ...contacts])
+    close()
   }
-  const onUpdate = (user: User) => {
-    updateUserRequest(user).then((response) =>
-      response.json().then(({ _doc }) => {
-        setUsers(users.map((user) => (user._id === _doc._id ? _doc : user)))
-        close()
-      })
+  const onUpdate = async (contact: ContactFormType) => {
+    await updateContactRequest({
+      ...contact,
+      userId: loadedUser._id,
+    })
+
+    setContacts(
+      //@ts-ignore
+      contacts.map((item) => (item._id === contact._id ? contact : item))
     )
+    close()
   }
-  const onDelete = (user: User) => {
-    deleteUserRequest(user._id)
-    setUsers(users.filter((u) => u._id != user._id))
+  const onDelete = async (contactId: string) => {
+    const data = await deleteContactRequest({
+      contactId,
+      userId: loadedUser._id,
+    })
+
+    if (data.status === 200)
+      setContacts(contacts.filter((u) => u._id != contactId))
   }
   const close = () => {
-    setUser(undefined)
+    setContact(undefined)
     setMode(undefined)
   }
   return (
     <Centered>
       <Box mt='md'>
         <ContactsTable
-          users={users}
-          activeUserId={user?._id}
-          setUser={onSetUser}
-          deleteUser={onDelete}
+          contacts={contacts}
+          activeContactId={contact?._id}
+          setContact={onSetContact}
+          deleteContact={onDelete}
         />
         <Button
           mt='md'
@@ -74,7 +79,7 @@ export function ContactsPage() {
         title={mode == 'create' ? 'Add contact' : 'Edit contact'}
       >
         <ContactForm
-          user={user}
+          contact={contact}
           onSubmit={mode == 'create' ? onCreate : onUpdate}
         />
       </Modal>

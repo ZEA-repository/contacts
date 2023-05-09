@@ -117,22 +117,21 @@ export function CustomHeader({ links }: Props) {
   )
 
   const handleLogout = async () => {
-    await logoutRequest()
-    navigate('/login')
+    const data = await logoutRequest()
+    if (data.status === 200) navigate('/login')
   }
 
-  const logout = (
+  const buttonLogout = (
     <Tooltip
       label='Logout'
       position='right'
       transitionProps={{ duration: 500 }}
       className={classes.hiddenMobile}
+      onClick={handleLogout}
     >
-      <Button onClick={handleLogout} variant='default'>
-        <ActionIcon variant='subtle' aria-label='Logout'>
-          <IconLogout size='1.5rem' />
-        </ActionIcon>
-      </Button>
+      <ActionIcon variant='subtle' aria-label='Logout'>
+        <IconLogout size='1.5rem' />
+      </ActionIcon>
     </Tooltip>
   )
 
@@ -143,7 +142,7 @@ export function CustomHeader({ links }: Props) {
           <Group position='apart' sx={{ height: '100%' }}>
             {logo}
             <Group className={classes.hiddenMobile}>{items}</Group>
-            {logout}
+            {buttonLogout}
 
             <Burger
               opened={drawerOpened}

@@ -16,7 +16,7 @@ import { useDisclosure } from '@mantine/hooks'
 import { createUserRequest } from '@/api/user'
 import type { Registration } from '@/types'
 import { errorMessages } from '@/utils/validateForm'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import {
   validateEmail,
   validatePassword,
@@ -24,6 +24,7 @@ import {
 } from '@/utils/validateForm'
 
 export function RegistrationForm(props: PaperProps) {
+  const navigate = useNavigate()
   const [visible, { toggle }] = useDisclosure(false)
   const form = useForm<Registration>({
     initialValues: {
@@ -42,8 +43,11 @@ export function RegistrationForm(props: PaperProps) {
     },
   })
 
-  const handleSubmit = (values: Registration) => {
-    return createUserRequest(values)
+  const registrationSubmit = async (values: Registration) => {
+    const data = await createUserRequest(values)
+    if (data.status === 200) {
+      navigate('/')
+    }
   }
 
   return (
@@ -52,7 +56,7 @@ export function RegistrationForm(props: PaperProps) {
         Welcom to Registration
       </Text>
 
-      <form onSubmit={form.onSubmit(handleSubmit)}>
+      <form onSubmit={form.onSubmit(registrationSubmit)}>
         <Stack>
           <TextInput
             required
@@ -63,7 +67,7 @@ export function RegistrationForm(props: PaperProps) {
             onChange={(event) =>
               form.setFieldValue('login', event.currentTarget.value)
             }
-            error={form.errors.login && errorMessages.login}
+            error={form.errors.login && errorMessages.email}
             radius='md'
           />
 
