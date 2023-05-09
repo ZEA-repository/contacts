@@ -4,7 +4,6 @@ import { userDtoWithTokens } from '../../dtos/userDto'
 import bcrypt from 'bcrypt'
 import UserModel from '../../models/userModel'
 import { BadRequestError, AuthFailureError, NoDataError } from '../../exceptions/apiError'
-// import { authMiddlewares } from '@/middlewares/authMiddlewares'
 
 const router = Router()
 

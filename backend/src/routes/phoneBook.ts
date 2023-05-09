@@ -3,10 +3,11 @@ import UserModel from '../models/userModel'
 import type { Contact } from '../models/userModel'
 import { SuccessResponse } from '../exceptions/ApiResponse'
 import { BadRequestError } from '../exceptions/apiError'
+import { authMiddlewares } from '@/middlewares/authMiddlewares'
 
 const router = Router()
 
-router.get('/contacts', async (req, res: Response, next: NextFunction) => {
+router.get('/contacts', authMiddlewares, async (req, res: Response, next: NextFunction) => {
   try {
     const { id } = req.body
     const contacts = await UserModel.findOne({ _id: id })
@@ -16,7 +17,7 @@ router.get('/contacts', async (req, res: Response, next: NextFunction) => {
   }
 })
 
-router.post('/contact/create', async (req: Request, res: Response, next: NextFunction) => {
+router.post('/contact/create', authMiddlewares, async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { userId, firstname, email, phone, avatar } = req.body
     const user = await UserModel.findOne({ _id: userId }, ['contacts'])
@@ -40,11 +41,9 @@ router.post('/contact/create', async (req: Request, res: Response, next: NextFun
   }
 })
 
-router.put('/contact/update', async (req: Request, res: Response, next: NextFunction) => {
+router.put('/contact/update', authMiddlewares, async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { userId, contactId, firstname, email, phone, avatar } = req.body
-    console.log('🚀 ~ file: phoneBook.ts:46 ~ router.put ~ userId:', userId)
-    console.log('🚀 ~ file: phoneBook.ts:46 ~ router.put ~ contactId:', contactId)
     await UserModel.updateOne(
       { _id: userId, 'contacts._id': contactId },
       {
@@ -63,7 +62,7 @@ router.put('/contact/update', async (req: Request, res: Response, next: NextFunc
   }
 })
 
-router.delete('/contact/delete', async (req: Request, res: Response, next: NextFunction) => {
+router.delete('/contact/delete', authMiddlewares, async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { userId, contactId } = req.body
     await UserModel.updateOne({ _id: userId }, { $pull: { contacts: { _id: contactId } } })

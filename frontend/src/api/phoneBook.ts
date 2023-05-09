@@ -7,7 +7,6 @@ interface ContactCreate extends ContactFormType {
 }
 export const createContactRequest = async (body: ContactCreate) => {
   try {
-    console.log('FROM createContactRequest')
     const { userId, firstname, email, phone, avatar } = body
     const response = await fetch(`${baseUrl}/phone-book/contact/create`, {
       method: 'POST',

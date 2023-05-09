@@ -1,3 +1,4 @@
+//TODO: Сделать для апи fetcher
 export const fetcher = async (url: string) => {
   const baseUrl = import.meta.env.VITE_API_URL
   const response = await fetch(`${baseUrl}/${url}`)

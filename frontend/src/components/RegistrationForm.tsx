@@ -10,7 +10,6 @@ import {
   Checkbox,
   Anchor,
   Stack,
-  // CheckboxProps,
 } from '@mantine/core'
 import { useDisclosure } from '@mantine/hooks'
 import { createUserRequest } from '@/api/user'
