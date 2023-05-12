@@ -31,8 +31,11 @@ NODE_ENV=development
 ```
 
 ▻ Signing in to Google:
-Settings -> Forwarding and POP/IMAP -> Status: IMAP is enabled -> Enable IMAP
-Account -> Security -> 2-Step Verification -> Enable
+
+```
+1. Settings -> Forwarding and POP/IMAP -> Status: IMAP is enabled -> Enable IMAP
+2. Account -> Security -> 2-Step Verification -> Enable
+```
 
 ▻ [Create and use app password for email authentication through SMTP.](https://myaccount.google.com/apppasswords)
 
